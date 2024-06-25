@@ -115,7 +115,7 @@ export default function Navbar() {
           >
             <option value="">Choose your algorithm</option>
             <option value="Dijkstra">Dijkstra</option>
-            <option value="BDS">BDS</option>
+            <option value="DFS">DFS</option>
             <option value="BFS">BFS</option>
           </select>
         </div>

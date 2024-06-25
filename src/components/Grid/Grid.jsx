@@ -1,7 +1,8 @@
 import React, {useState, useRef, useEffect} from 'react';
 import { useModes } from '../../contexts/context.jsx';
 import "./grid.css"
-// import { BFS, BDS } from '../../utils/algos.jsx';
+import styled from 'styled-components';
+// import { BFS, DFS } from '../../utils/algos.jsx';
 
 
 function Grid() {
@@ -50,12 +51,14 @@ function Grid() {
         count * 8
       }ms`;
       refarray[c.x + c.y * 50].current.classList.add("visited");
-      if (c.x == target.x && c.y == target.y) return [c, count];
+      if (c.x == target.x && c.y == target.y){ 
+        return [c, count];
+      }
 
       if (
         c.x + 1 < 50 &&
         !visited[`${c.x + 1}-${c.y}`] &&
-        !graph[c.y][c.x + 1].iswall
+        !graph[c.y][c.x + 1].isWall
       ) {
         queue.unshift({ x: c.x + 1, y: c.y });
         parent[`${c.x + 1}-${c.y}`] = { ...c };
@@ -64,7 +67,7 @@ function Grid() {
       if (
         c.x - 1 >= 0 &&
         !visited[`${c.x - 1}-${c.y}`] &&
-        !graph[c.y][c.x - 1].iswall
+        !graph[c.y][c.x - 1].isWall
       ) {
         queue.unshift({ x: c.x - 1, y: c.y });
         parent[`${c.x - 1}-${c.y}`] = { ...c };
@@ -73,7 +76,7 @@ function Grid() {
       if (
         c.y + 1 < 25 &&
         !visited[`${c.x}-${c.y + 1}`] &&
-        !graph[c.y + 1][c.x].iswall
+        !graph[c.y + 1][c.x].isWall
       ) {
         queue.unshift({ x: c.x, y: c.y + 1 });
         parent[`${c.x}-${c.y + 1}`] = { ...c };
@@ -82,7 +85,7 @@ function Grid() {
       if (
         c.y - 1 >= 0 &&
         !visited[`${c.x}-${c.y - 1}`] &&
-        !graph[c.y - 1][c.x].iswall
+        !graph[c.y - 1][c.x].isWall
       ) {
         queue.unshift({ x: c.x, y: c.y - 1 });
         parent[`${c.x}-${c.y - 1}`] = { ...c };
@@ -92,7 +95,7 @@ function Grid() {
     return null;
   }
 
-  function BDS(graph, visited, parent, start, target) {
+  function DFS(graph, visited, parent, start, target) {
     let queue = [start];
     let count = 0;
     visited[`${start.x}-${start.y}`] = true;
@@ -104,12 +107,14 @@ function Grid() {
         count * 8
       }ms`;
       refarray[c.x + c.y * 50].current.classList.add("visited");
-      if (c.x == target.x && c.y == target.y) return [c, count];
+      if (c.x == target.x && c.y == target.y) {
+        return [c, count];
+      }
 
       if (
         c.y + 1 < 25 &&
         !visited[`${c.x}-${c.y + 1}`] &&
-        !graph[c.y + 1][c.x].iswall
+        !graph[c.y + 1][c.x].isWall
       ) {
         queue.unshift({ x: c.x, y: c.y + 1 });
         parent[`${c.x}-${c.y + 1}`] = { ...c };
@@ -118,7 +123,7 @@ function Grid() {
       if (
         c.x - 1 >= 0 &&
         !visited[`${c.x - 1}-${c.y}`] &&
-        !graph[c.y][c.x - 1].iswall
+        !graph[c.y][c.x - 1].isWall
       ) {
         queue.unshift({ x: c.x - 1, y: c.y });
         parent[`${c.x - 1}-${c.y}`] = { ...c };
@@ -127,7 +132,7 @@ function Grid() {
       if (
         c.y - 1 >= 0 &&
         !visited[`${c.x}-${c.y - 1}`] &&
-        !graph[c.y - 1][c.x].iswall
+        !graph[c.y - 1][c.x].isWall
       ) {
         queue.unshift({ x: c.x, y: c.y - 1 });
         parent[`${c.x}-${c.y - 1}`] = { ...c };
@@ -136,7 +141,7 @@ function Grid() {
       if (
         c.x + 1 < 50 &&
         !visited[`${c.x + 1}-${c.y}`] &&
-        !graph[c.y][c.x + 1].iswall
+        !graph[c.y][c.x + 1].isWall
       ) {
         queue.unshift({ x: c.x + 1, y: c.y });
         parent[`${c.x + 1}-${c.y}`] = { ...c };
@@ -162,15 +167,12 @@ function Grid() {
       let { element: c, priority: dist } = priorityQueue.extractMin();
 
       refarray[c.x + c.y * 50].current.style["transition-delay"] = `${
-        count
+        count*4
       }ms`;
       refarray[c.x + c.y * 50].current.classList.add("visited");
 
       // If the target node is reached, return the path and distance
       if (c.x === target.x && c.y === target.y) {
-        setSteps(count);
-        setCost(dist);
-        setShowResult(true);
         return [c, dist];
       }
 
@@ -266,7 +268,7 @@ function Grid() {
   //   return null;
   // }
 
-  // function BDS(graph, parent, visited, start, target) {
+  // function DFS(graph, parent, visited, start, target) {
   //   let q = [start];
   //   let count = 0;
   //   visited[`(${start.x},${start.y})`] = true;
@@ -351,16 +353,23 @@ function Grid() {
           current = parent[`${current.x}-${current.y}`];
         }
         setTimeout(() => {
+          let cnt = 0;
+          let dist = 0;
           path.reverse().forEach((elem, index) => {
             refarray[elem.x + elem.y * 50].current.style[
               "transition-delay"
             ] = `${index * 15}ms`;
             refarray[elem.x + elem.y * 50].current.classList.add("path");
+            cnt += 1;
+            dist += parseInt(grid[elem.y][elem.x].weight);
           });
+          setSteps(cnt);
+          setCost(dist);
+          setShowResult(true);
         }, result[1] * 9);
       }
     }
-    if (algo == "BDS") {
+    if (algo == "DFS") {
       let visited = {};
       let parent = {};
       for (let j = 0; j < 25; j++) {
@@ -369,7 +378,7 @@ function Grid() {
           parent[`${i}-${j}`] = null;
         }
       }
-      let result = BDS(grid, visited, parent, start.current, end.current);
+      let result = DFS(grid, visited, parent, start.current, end.current);
       let path = [];
       if (result != null) {
         let current = result[0];
@@ -378,12 +387,19 @@ function Grid() {
           current = parent[`${current.x}-${current.y}`];
         }
         setTimeout(() => {
+          let cnt = 0;
+          let dist = 0;
           path.reverse().forEach((elem, index) => {
             refarray[elem.x + elem.y * 50].current.style[
               "transition-delay"
             ] = `${index * 15}ms`;
             refarray[elem.x + elem.y * 50].current.classList.add("path");
+            cnt += 1;
+            dist += parseInt(grid[elem.y][elem.x].weight)
           });
+          setCost(dist);
+          setSteps(cnt);
+          setShowResult(true);
         }, result[1] * 9);
       }
     }
@@ -408,14 +424,21 @@ function Grid() {
           current = parent[`${current.x}-${current.y}`];
         }
         setTimeout(() => {
-          let cnt = 1
+          let cnt = 0
+          let dist = 0;
           path.reverse().forEach((elem, index) => {
             refarray[elem.x + elem.y * 50].current.style[
               "transition-delay"
             ] = `${index * 15}ms`;
             refarray[elem.x + elem.y * 50].current.classList.add("path");
+            // console.log("weight: ", grid[elem.x][elem.y].weight);
+            dist += parseInt(grid[elem.y][elem.x].weight);
+            cnt++;
             // refarray[elem.x + elem.y * 50].current.innerHTML = cnt++;
           });
+          setSteps(cnt);
+          setCost(dist);
+          setShowResult(true);
         }, result[1] * 9);
       }
     }
@@ -436,6 +459,10 @@ function Grid() {
   return (
     <div>
       {/* {showResult && <h3 style={{textAlign:'center'}}> Cost to reach Target : {cost} </h3>} */}
+      <StyledHeading>
+        Start : ({start.current.x},{start.current.y}) {"------------->"} End: ({end.current.x},{end.current.y}){" "}
+        {showResult && `Steps : ${steps} Cost: ${cost}`}
+      </StyledHeading>
       <div className="board">
         {refarray.map((elem, index) => {
           let classList = ["cell"];
@@ -535,3 +562,10 @@ function Grid() {
 }
 
 export default Grid
+
+const StyledHeading = styled.h3`
+  text-align: center:
+  color: blue;
+  background-color: white;
+  padding: 1rem;
+`
