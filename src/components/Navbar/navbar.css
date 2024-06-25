@@ -1,0 +1,11 @@
+.navbar{
+    width:100vw;  
+    /* height:min(20vh , 100px); */
+    margin: auto;
+    padding: 1rem;
+    background:rgb(88, 202, 214);
+}
+
+.navbar .selected {
+    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255,     0.5) -3px -3px 6px 1px inset;
+}
